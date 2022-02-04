@@ -45,11 +45,13 @@ func MustExecuteInSh(args []string, verbose bool) string {
 
 	go func() {
 		defer wg.Done()
+		var r io.Reader
 		if verbose {
-			io.Copy(os.Stdout, stdout)
+			r = io.TeeReader(stdout, os.Stdout)
 		} else {
-			collectedOutput, _ = io.ReadAll(stdout)
+			r = stdout
 		}
+		collectedOutput, _ = io.ReadAll(r)
 	}()
 
 	wg.Wait()
