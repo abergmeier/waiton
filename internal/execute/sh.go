@@ -1,6 +1,7 @@
 package execute
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -13,6 +14,10 @@ import (
 func MustExecuteInSh(args []string, verbose bool) string {
 
 	argsString := shellquote.Join(args...)
+
+	if verbose {
+		fmt.Fprintf(os.Stderr, "Passing to sh -c: %s\n", argsString)
+	}
 
 	cmd := exec.Command("sh", "-c", argsString)
 	cmd.Env = os.Environ()
